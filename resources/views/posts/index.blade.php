@@ -7,7 +7,7 @@
                 Life is full of adventure.
             </h2>
             <button onclick="document.getElementById('latest-posts').scrollIntoView({ behavior: 'smooth' });"
-                    class="bg-white text-[#00306D] font-semibold px-6 py-3 rounded-lg shadow-md hover:bg-[#f0f8ff] transition">
+                class="bg-[#00306D] text-white font-semibold px-6 py-3 rounded-lg shadow-md hover:bg-[#002550] transition">
                 Explore Now
             </button>
         </div>
