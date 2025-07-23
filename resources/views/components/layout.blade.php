@@ -5,11 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>{{ env('APP_NAME') }}</title>
+    <link href="https://fonts.googleapis.com/css2?family=PT+Serif&display=swap" rel="stylesheet">
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 @vite(['resources/css/app.css', 'resources/js/app.js'])
   </head>
   <body class="bg-slate-100 text-slate-900">
-    <header class="bg-slate-800 shadow-lg">
+    <header class="bg-[#00306D] shadow-lg">
         <nav>
             <a href="{{ route('posts.index') }}" class="nav-link">Home</a>
 
