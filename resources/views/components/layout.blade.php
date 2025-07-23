@@ -23,15 +23,24 @@
                     </button>
 
                     {{--Dropdown menu--}}
-                    <div x-show="open" @click.outside="open=false"class="bg-white shadow-lg absolute top-10 right-0 rounded-lg overflow-hidden font-light">
-                        <p class="name">{{auth()->user()->name}}</p>
-                        <a href="{{ route('dashboard') }}" class="block hover:bg-slate-100 pl-4 pr-8 py-2 mb-1">Dashboard</a>
+                    <div x-show="open"
+                        x-transition
+                        @click.outside="open=false"
+                        class="absolute top-12 right-0 w-48 bg-white border border-[#00306D]/20 rounded-xl shadow-xl z-50 py-3 px-4 space-y-2 text-sm" >
+                        <p class="font-semibold text-[#00306D] mb-1">{{ auth()->user()->name }}</p>
 
-                        <form action="{{route('logout')}}" method="post">
+                        <a href="{{ route('dashboard') }}"
+                        class="block rounded-md px-3 py-2 text-[#00306D] hover:bg-[#00306D]/10 transition-colors">Dashboard</a>
+
+                        <form action="{{ route('logout') }}" method="post">
                             @csrf
-                            <button class="block w-full text=left hover:bg-slate-100 pl-4 pr-8 py-2"> Logout</button>
+                            <button type="submit"
+                                class="w-full text-left rounded-md px-3 py-2 text-[#00306D] hover:bg-red-100 transition-colors">
+                                Logout
+                            </button>
                         </form>
                     </div>
+
                 </div>
             @endauth
 
