@@ -27,9 +27,13 @@
                 </div>
 
                 {{-- Remember me --}}
-                <div class="flex items-center gap-2">
+                <div class="mb-4 flex justify-between iteams-center">
+                    <div>
                     <input type="checkbox" name="remember" id="remember" class="accent-[#00306D]">
                     <label for="remember" class="text-sm text-slate-700">Remember me</label>
+                    </div>
+
+                <a href="{{ route('password.request') }}" class="text-[#00306D] hover:underline">Forgot your password?</a>
                 </div>
 
                 @error('failed')
