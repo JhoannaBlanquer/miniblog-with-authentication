@@ -62,20 +62,21 @@
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
         @foreach ($posts as $post)
             <x-postCard :post="$post">
-                {{-- Update post --}}
-                <a href="{{ route('posts.edit', $post) }}"
-                    class="bg-green-500 text-white px-2 py-1 text-xs rounded-md hover:bg-green-600 transition">
-                    Update
-                </a>
+                {{-- Buttons inside postCard slot, bottom-left --}}
+                <div class="mt-auto flex gap-2 pt-4">
+                    <a href="{{ route('posts.edit', $post) }}"
+                        class="bg-green-500 text-white px-2 py-1 text-xs rounded-md hover:bg-green-600 transition">
+                        Update
+                    </a>
 
-                {{-- Delete post --}}
-                <form action="{{ route('posts.destroy', $post) }}" method="post" class="inline">
-                    @csrf
-                    @method('DELETE')
-                    <button class="bg-red-500 text-white px-2 py-1 text-xs rounded-md hover:bg-red-600 transition">
-                        Delete
-                    </button>
-                </form>
+                    <form action="{{ route('posts.destroy', $post) }}" method="post" class="inline">
+                        @csrf
+                        @method('DELETE')
+                        <button class="bg-red-500 text-white px-2 py-1 text-xs rounded-md hover:bg-red-600 transition">
+                            Delete
+                        </button>
+                    </form>
+                </div>
             </x-postCard>
         @endforeach
     </div>

@@ -24,18 +24,25 @@
     </div>
 
     {{-- Body --}}
-    <div class="text-sm text-gray-800 mb-4 {{ !$post->image ? 'mt-10 text-center' : '' }}">
+    <div class="text-sm text-gray-800 {{ !$post->image ? 'mt-10 text-center' : '' }}">
         @if ($full)
-            <div class="whitespace-pre-line leading-relaxed break-words max-w-full">
+            <div class="whitespace-pre-line leading-relaxed break-words max-w-full mb-4">
                 {{ $post->body }}
             </div>
         @else
-            <div class="line-clamp-5">
+            <div class="line-clamp-5 mb-4">
                 {{ Str::words($post->body, 30) }}
             </div>
-            <a href="{{ route('posts.show', $post) }}" class="text-blue-500 ml-2">Read more &rarr;</a>
+
+            <div class="flex justify-end">
+                <a href="{{ route('posts.show', $post) }}"
+                    class="text-sm text-blue-600 font-medium hover:underline">
+                    Read more &rarr;
+                </a>
+            </div>
         @endif
     </div>
+
 
     {{-- Slot Area --}}
     <div class="flex items-center justify-end gap-4 mt-auto">
