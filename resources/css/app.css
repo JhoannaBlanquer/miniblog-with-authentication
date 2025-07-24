@@ -23,7 +23,7 @@
 
     .nav-link {
     font-family: 'PT Serif', serif;
-    @apply text-white hover:text-slate-200 font-semibold;
+    @apply text-white hover:text-slate-200;
     }
 
 

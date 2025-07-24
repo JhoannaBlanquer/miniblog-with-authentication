@@ -8,6 +8,7 @@ use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller implements HasMiddleware
 {
@@ -41,15 +42,26 @@ class PostController extends Controller implements HasMiddleware
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-    {
+    {        
         //Validate
-        $fields = $request->validate([
+        $request->validate([
             'title' => ['required', 'max:255'],
-            'body' => ['required']
+            'body' => ['required'],
+            'image' => ['nullable', 'file', 'mimes:webp,png,jpg']
         ]);
 
+        //Store image
+        $path = null;
+        if($request->hasFile('image')) {
+            $path = Storage::disk('public')->put('posts_images', $request->image);
+        }
+
         //Create a post
-        Auth::user()->posts()->create($fields);
+        Auth::user()->posts()->create([
+            'title' => $request->title,
+            'body' => $request->body,
+            'image' => $path
+        ]);
 
         //Redirect to dashboard
         return back()->with('success', 'Your post was successfully created');
@@ -81,13 +93,28 @@ class PostController extends Controller implements HasMiddleware
         Gate::authorize('modify', $post);
 
         ///Validate
-        $fields = $request->validate([
+        $request->validate([
             'title' => ['required', 'max:255'],
-            'body' => ['required']
+            'body' => ['required'],
+            'image' => ['nullable', 'file', 'mimes:webp,png,jpg']
+
         ]);
 
+        //Store image
+        $path = $post->image ?? null;
+        if($request->hasFile('image')) {
+            if ($post->image) {
+                Storage::disk('public')->delete($post->image);
+            }
+            $path = Storage::disk('public')->put('posts_images', $request->image);
+        }
+
         //Update a post
-        $post->update($fields);
+        $post->update([
+            'title' => $request->title,
+            'body' => $request->body,
+            'image' => $path
+        ]);
 
         //Redirect to dashboard
         return redirect()->route('dashboard')->with('success', 'Your post was successfully updated');
@@ -100,6 +127,11 @@ class PostController extends Controller implements HasMiddleware
     {
         //Authorizing the action
         Gate::authorize('modify', $post);
+
+        //Delete post image
+        if ($post->image) {
+            Storage::disk('public')->delete($post->image);
+        }
 
         $post->delete();
         return back()->with('delete', 'Your post was successfully deleted!');
