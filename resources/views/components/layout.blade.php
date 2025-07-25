@@ -12,7 +12,14 @@
 
     {{-- Header --}}
     <header class="bg-[#00306D] shadow-lg">
-        <nav class="flex justify-between items-center px-6 py-4 text-white">
+        <nav class="flex justify-between items-center px-6 py-4 text-white relative">
+            
+            <!-- Logo -->
+        <div class="absolute left-1/2 transform -translate-x-1/2">
+            <img src="{{ asset('images/logo.png') }}" alt="Logo" class="h-[110px] object-contain">
+        </div>
+
+
             <a href="{{ route('posts.index') }}" class="nav-link">Home</a>
 
             @auth

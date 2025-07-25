@@ -4,7 +4,7 @@
         <img src="{{ asset('images/banner.jpg') }}" alt="Banner" class="w-full h-full object-cover rounded-lg shadow">
         <div class="absolute inset-0 flex flex-col items-center justify-center bg-black bg-opacity-40 rounded-lg text-center px-4">
             <h2 class="text-white text-6xl font-extrabold pt-serif mb-6">
-                Life is full of adventure.
+                Where every journey finds its place.
             </h2>
             <button onclick="document.getElementById('latest-posts').scrollIntoView({ behavior: 'smooth' });"
                 class="bg-[#00306D] text-white font-semibold px-6 py-3 rounded-lg shadow-md hover:bg-[#002550] transition">
