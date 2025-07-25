@@ -1,3 +1,82 @@
+# 🌍 WanderWhere
+
+*A travel blog where every journey finds its place.*
+
+## Description
+
+**WanderWhere** is a mini blog travel blogging platform built with Laravel, Tailwind CSS, and MYSQL. Designed for travelers, storytellers, and curious wanderers, it allows users to share personal travel experiences through blog posts and discover hidden gems around the world.
+
+---
+
+## Features
+
+- User Authentication
+- Author Authorization
+- CRUD functionality
+- Image upload support
+- Like and Comment feature
+
+---
+
+## Requirements
+
+- PHP >= 8.1  
+- Composer  
+- Node.js & npm  
+- MySQL (or a compatible database)
+
+---
+
+## Installation Guide
+
+1. **Clone the repository**
+
+    ```bash
+    git clone https://github.com/YourUsername/miniblog-with-authentication.git
+    cd miniblog-with-authentication
+    ```
+
+2. **Install PHP dependencies**
+
+    ```bash
+    composer install
+    ```
+
+3. **Install JavaScript dependencies**
+
+    ```bash
+    npm install && npm run dev
+    ```
+
+4. **Set up the environment**
+
+    ```bash
+    cp .env.example .env
+    php artisan key:generate
+    ```
+
+5. **Configure your database**
+
+    Open the `.env` file and set your database credentials:
+
+    ```env
+    DB_DATABASE=your_database_name
+    DB_USERNAME=your_username
+    DB_PASSWORD=your_password
+    ```
+
+6. **Run database migrations**
+
+    ```bash
+    php artisan migrate
+    ```
+
+7. **Serve the application**
+
+    ```bash
+    php artisan serve
+    ```
+
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
 <p align="center">
