@@ -15,7 +15,7 @@ class PostController extends Controller implements HasMiddleware
     public static function middleware(): array
     {
         return [
-            new Middleware('auth', except: ['index', 'show']),
+            new Middleware('auth', except: ['index', 'show', 'like', 'comment']),
         ];  
     }
 
@@ -135,5 +135,36 @@ class PostController extends Controller implements HasMiddleware
 
         $post->delete();
         return back()->with('delete', 'Your post was successfully deleted!');
+    }
+
+    public function like(Post $post)
+    {
+        $userId = auth()->id(); // can be null for guests
+
+        // Check if already liked
+        $existing = $post->likes()->where('user_id', $userId)->first();
+
+        if ($existing) {
+            $existing->delete(); // Unlike
+        } else {
+            $post->likes()->create([
+                'user_id' => $userId, // nullable
+            ]);
+        }
+
+        return back();
+    }
+
+
+    public function comment(Request $request, Post $post)
+    {
+        $request->validate(['body' => 'required|string|max:1000']);
+
+        $post->comments()->create([
+            'user_id' => auth()->id(), // Can be null now
+            'body' => $request->body,
+        ]);
+
+        return back();
     }
 }
