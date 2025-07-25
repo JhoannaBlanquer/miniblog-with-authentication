@@ -1,5 +1,5 @@
 <x-layout>
-    <a href="{{ route('dashboard') }}" class="block mb-2 text-xs text-blue-500">&larr; Go back to your dashboard</a>
+    <a href="{{ route('dashboard') }}" class="inline-block text-base text-[#00306D] font-medium hover:underline mb-10 ml-5">&larr; Go back to your dashboard</a>
 
     <div class="w-full flex justify-center">
         <div class="w-full max-w-xl bg-white p-6 rounded-xl shadow-md border border-[#00306D]/20">
