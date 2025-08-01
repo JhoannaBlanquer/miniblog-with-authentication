@@ -13,6 +13,7 @@
     @vite('resources/js/app.jsx')
     <script>
         window.posts = @json($posts);
+        window.users = @json($users);
         window.userCount = {{ $userCount }};
         window.postCount = {{ $postCount }};
     </script>

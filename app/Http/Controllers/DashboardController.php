@@ -23,17 +23,4 @@ class DashboardController extends Controller
             'user' => $user,
         ]);
     }
-
-    public function admin()
-    {
-        $posts = Post::oldest()->get();
-        $userCount = User::count(); 
-        $postCount = $posts->count(); 
-
-        return view('admin.admin', [
-            'posts' => $posts,
-            'userCount' => $userCount,
-            'postCount' => $postCount,
-        ]);
-    }
 }
