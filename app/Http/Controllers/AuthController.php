@@ -10,53 +10,67 @@ class AuthController extends Controller
 {
     // Register User
     public function register(Request $request) {
-        //Validate
+        // Validate
         $fields = $request->validate([
             'name' => ['required', 'max:255'],
             'email' => ['required', 'max:255', 'email', 'unique:users'],
             'password' => ['required', 'min:8', 'confirmed']
         ]);
 
-        //Register
+        // Register
         $user = User::create($fields);
 
-        //Login
+        // Assign role
+        if ($user->email === 'admin@gmail.com') {
+            $user->assignRole('admin');
+        } else {
+            $user->assignRole('user'); // optional default role
+        }
+
+        // Login
         Auth::login($user);
 
-        //Redirect
+        // Redirect
         return redirect()->route('home');
     }
 
-    //Login User
+    // Login User
     public function login(Request $request) {
-        //Validate
-        $fields = $request->validate([
+        // Validate
+        $credentials = $request->validate([
             'email' => ['required', 'max:255', 'email'],
             'password' => ['required']
         ]);
 
-        //Try to login the user
-        if(Auth::attempt($fields, $request->remember)){
-            return redirect()->intended('/dashboard');
-        }else {
-            return back()->withErrors([
-                'failed' => 'Login failed. Please check your email and password.'
-            ]);
+        // Try to login the user
+        if (Auth::attempt($credentials, $request->remember)) {
+            $request->session()->regenerate();
+
+            // Redirect based on role
+            if (Auth::user()->hasRole('admin')) {
+                return redirect()->route('admin.dashboard');
+            }
+
+            return redirect()->route('dashboard');
         }
+
+        return back()->withErrors([
+            'failed' => 'Login failed. Please check your email and password.'
+        ]);
     }
 
-    //Logout User
+    // Logout User
     public function logout(Request $request) {
-        //Logout the user
+        // Logout the user
         Auth::logout();
 
-        //Invalidate user's session
+        // Invalidate session
         $request->session()->invalidate();
 
-        //Regenerate CSRF toke
+        // Regenerate CSRF token
         $request->session()->regenerateToken();
 
-        //Redirect to home
+        // Redirect to home
         return redirect('/');
     }
 }

@@ -167,4 +167,15 @@ class PostController extends Controller implements HasMiddleware
 
         return back();
     }
+
+    public function allPostsApi()
+    {
+        if (!auth()->user()->is_admin) {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
+
+        $posts = Post::with('user')->latest()->get();
+        return response()->json($posts);
+    }
+
 }

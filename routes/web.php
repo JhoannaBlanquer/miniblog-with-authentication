@@ -6,6 +6,7 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\ResetPasswordController;
 use Illuminate\Support\Facades\Route;
 
+
 Route::redirect('/', 'posts');
 
 Route::resource('posts', PostController::class);
@@ -18,7 +19,10 @@ Route::post('/posts/{post}/like', [PostController::class, 'like'])->name('posts.
 Route::post('/posts/{post}/comment', [PostController::class, 'comment'])->name('posts.comment');
 
 Route::middleware('auth')->group(function(){
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])
+        ->middleware('admin.redirect')
+        ->name('dashboard');
+
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 });
 
@@ -30,5 +34,10 @@ Route::middleware('guest')->group(function(){
     Route::post('/login' , [AuthController::class, 'login']);
 
     Route::view('/forgot-password', 'auth.forgot-password')->name('password.request');
+});
 
+Route::middleware(['auth', 'role:admin'])->group(function () {
+    Route::get('/admin/dashboard', function () {
+        return view('admin.admin');
+    })->name('admin.dashboard');
 });
