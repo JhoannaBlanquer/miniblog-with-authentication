@@ -37,7 +37,5 @@ Route::middleware('guest')->group(function(){
 });
 
 Route::middleware(['auth', 'role:admin'])->group(function () {
-    Route::get('/admin/dashboard', function () {
-        return view('admin.admin');
-    })->name('admin.dashboard');
+Route::get('/admin/dashboard', [DashboardController::class, 'admin'])->name('admin.dashboard');
 });

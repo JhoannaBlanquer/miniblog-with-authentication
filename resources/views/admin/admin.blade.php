@@ -11,6 +11,11 @@
 
     @viteReactRefresh
     @vite('resources/js/app.jsx')
+    <script>
+        window.posts = @json($posts);
+        window.userCount = {{ $userCount }};
+        window.postCount = {{ $postCount }};
+    </script>
 </head>
 <body class="bg-gray-50 text-gray-900">
 

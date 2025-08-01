@@ -1,10 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import * as Tabs from '@radix-ui/react-tabs';
 import * as Dialog from '@radix-ui/react-dialog';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 
 export default function AdminDashboard() {
     const [openModal, setOpenModal] = useState(false);
+    const [posts, setPosts] = useState([]);
+    const [userCount, setUserCount] = useState(0);
+    const [postCount, setPostCount] = useState(0);
+
+    useEffect(() => {
+        if (window.posts) setPosts(window.posts);
+        if (window.userCount) setUserCount(window.userCount);
+        if (window.postCount) setPostCount(window.postCount);
+    }, []);
 
     const handleLogout = () => {
         fetch('/logout', {
@@ -20,7 +29,6 @@ export default function AdminDashboard() {
 
     return (
         <div className="flex flex-col min-h-screen font-sans bg-blue-100 text-gray-900">
-
             {/* Header */}
             <header className="bg-[#00306D] text-white py-4 shadow-md">
                 <div className="container mx-auto px-6 flex justify-between items-center">
@@ -43,11 +51,11 @@ export default function AdminDashboard() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-6">
                     <div className="bg-brown-700 text-white p-4 rounded shadow text-center">
                         <h2 className="text-lg font-semibold">Users</h2>
-                        <p className="text-2xl">2</p>
+                        <p className="text-2xl">{userCount}</p>
                     </div>
                     <div className="bg-brown-700 text-white p-4 rounded shadow text-center">
                         <h2 className="text-lg font-semibold">Posts</h2>
-                        <p className="text-2xl">5</p>
+                        <p className="text-2xl">{postCount}</p>
                     </div>
                     <div className="bg-brown-700 text-white p-4 rounded shadow text-center">
                         <h2 className="text-lg font-semibold">Likes</h2>
@@ -76,19 +84,66 @@ export default function AdminDashboard() {
                                     <Dialog.Content className="fixed top-[30%] left-1/2 -translate-x-1/2 bg-white p-6 rounded shadow-lg w-[400px]">
                                         <Dialog.Title className="text-lg font-bold mb-2">Create Post</Dialog.Title>
                                         <form method="POST" action="/posts">
+                                            <input
+                                                type="hidden"
+                                                name="_token"
+                                                value={document.querySelector('meta[name="csrf-token"]').getAttribute('content')}
+                                            />
                                             <input type="text" name="title" placeholder="Title" className="w-full mb-2 border p-2" />
                                             <textarea name="content" placeholder="Content" className="w-full mb-2 border p-2"></textarea>
                                             <button type="submit" className="bg-green-600 text-white px-4 py-2 rounded">Save</button>
                                         </form>
+
                                         <Dialog.Close className="absolute top-2 right-2">×</Dialog.Close>
                                     </Dialog.Content>
                                 </Dialog.Portal>
                             </Dialog.Root>
                         </div>
 
-                        {/* Example post entry */}
-                        <div className="border p-4 rounded bg-white">
-                            Post 1
+                        {/* Posts Table */}
+                        <div className="bg-white rounded shadow overflow-hidden">
+                            <div className="grid grid-cols-3 font-bold bg-gray-200 px-4 py-2 border-b">
+                                <div>ID</div>
+                                <div>Title</div>
+                                <div className="text-right">Actions</div>
+                            </div>
+
+                            {posts.length > 0 ? (
+                                posts.map((post) => (
+                                    <div key={post.id} className="grid grid-cols-3 items-center px-4 py-3 border-b">
+                                        <div>{post.id}</div>
+                                        <div>{post.title}</div>
+                                        <div className="flex justify-end space-x-2">
+                                            <a
+                                                href={`/posts/${post.id}`}
+                                                className="text-sm bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600"
+                                            >
+                                                Read More
+                                            </a>
+                                            <a
+                                                href={`/posts/${post.id}/edit`}
+                                                className="text-sm bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600"
+                                            >
+                                                Edit
+                                            </a>
+                                            <form method="POST" action={`/posts/${post.id}`} onSubmit={(e) => {
+                                                if (!confirm('Are you sure you want to delete this post?')) e.preventDefault();
+                                            }}>
+                                                <input type="hidden" name="_method" value="DELETE" />
+                                                <input type="hidden" name="_token" value={document.querySelector('meta[name="csrf-token"]').content} />
+                                                <button
+                                                    type="submit"
+                                                    className="text-sm bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700"
+                                                >
+                                                    Delete
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                ))
+                            ) : (
+                                <div className="px-4 py-3 text-gray-600">No posts found.</div>
+                            )}
                         </div>
                     </Tabs.Content>
 
