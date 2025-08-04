@@ -8,43 +8,39 @@ use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
-    // Register User
-    public function register(Request $request) {
-        // Validate
+    // Handle user registration (form)
+    public function register(Request $request)
+    {
+        // Validate request
         $fields = $request->validate([
             'name' => ['required', 'max:255'],
             'email' => ['required', 'max:255', 'email', 'unique:users'],
-            'password' => ['required', 'min:8', 'confirmed']
+            'password' => ['required', 'min:8', 'confirmed'],
         ]);
 
-        // Register
-        $user = User::create($fields);
+        // Create user
+        $user = $this->createUser($fields);
 
-        // Assign role
-        if ($user->email === 'admin@gmail.com') {
-            $user->assignRole('admin');
-        } else {
-            $user->assignRole('user'); // optional default role
-        }
-
-        // Login
+        // Log in the user
         Auth::login($user);
 
-        // Redirect
+        // Redirect after registration
         return redirect()->route('home');
     }
 
-    // Login User
-    public function login(Request $request) {
-        // Validate
+    // Handle user login
+    public function login(Request $request)
+    {
+        // Validate login input
         $credentials = $request->validate([
-            'email' => ['required', 'max:255', 'email'],
-            'password' => ['required']
+            'email' => ['required', 'email', 'max:255'],
+            'password' => ['required'],
         ]);
 
-        // Try to login the user
-        if (Auth::attempt($credentials, $request->remember)) {
+        // Attempt authentication
+        if (Auth::attempt($credentials, $request->boolean('remember'))) {
             $request->session()->regenerate();
+            $request->session()->regenerateToken();
 
             // Redirect based on role
             if (Auth::user()->hasRole('admin')) {
@@ -54,23 +50,56 @@ class AuthController extends Controller
             return redirect()->route('dashboard');
         }
 
+        // If login fails
         return back()->withErrors([
-            'failed' => 'Login failed. Please check your email and password.'
+            'failed' => 'Login failed. Please check your email and password.',
         ]);
     }
 
-    // Logout User
-    public function logout(Request $request) {
-        // Logout the user
+    // Handle user logout
+    public function logout(Request $request)
+    {
         Auth::logout();
-
-        // Invalidate session
         $request->session()->invalidate();
-
-        // Regenerate CSRF token
         $request->session()->regenerateToken();
 
-        // Redirect to home
         return redirect('/');
+    }
+
+    // Handle AJAX-based registration
+    public function store(Request $request)
+    {
+        // Validate request
+        $fields = $request->validate([
+            'name' => ['required', 'max:255'],
+            'email' => ['required', 'email', 'max:255', 'unique:users'],
+            'password' => ['required', 'min:8'],
+        ]);
+
+        // Create user
+        $user = $this->createUser($fields);
+
+        // Return JSON response
+        return response()->json($user, 201);
+    }
+
+
+    private function createUser(array $fields): User
+    {
+        // Create the user with hashed password
+        $user = User::create([
+            'name' => $fields['name'],
+            'email' => $fields['email'],
+            'password' => bcrypt($fields['password']),
+        ]);
+
+        // Assign role based on email
+        if (in_array($user->email, config('admins.emails', ['admin@gmail.com']))) {
+            $user->assignRole('admin');
+        } else {
+            $user->assignRole('user');
+        }
+
+        return $user;
     }
 }

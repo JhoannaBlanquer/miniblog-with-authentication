@@ -8,26 +8,21 @@
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="bg-slate-100 text-slate-900 flex flex-col min-h-screen">
+<body class="bg-blue-100 text-slate-900 flex flex-col min-h-screen font-sans">
 
     {{-- Header --}}
     <header class="bg-[#00306D] shadow-lg">
-        <nav class="flex justify-between items-center px-6 py-4 text-white relative">
-            
-            <!-- Logo -->
-        <div class="absolute left-1/2 transform -translate-x-1/2">
-            <img src="{{ asset('images/logo.png') }}" alt="Logo" class="h-[110px] object-contain">
-        </div>
-
-
-            <a href="{{ route('posts.index') }}" class="nav-link">Home</a>
-
+        <nav class="flex items-center justify-between px-6 py-4 text-white relative max-w-7xl mx-auto w-full">
+            <!-- Logo Centered -->
+            <div class="absolute left-1/2 transform -translate-x-1/2">
+                <img src="{{ asset('images/logo.png') }}" alt="Logo" class="h-[110px] object-contain" />
+            </div>
+            <a href="{{ route('posts.index') }}" class="nav-link z-10">Home</a>
             @auth
-                <div class="relative" x-data="{ open: false }">
-                    <button @click="open = !open" class="round-btn overflow-hidden p-0 w-10 h-10 rounded-full">
+                <div class="relative z-10" x-data="{ open: false }">
+                    <button @click="open = !open" class="round-btn overflow-hidden p-0 w-10 h-10 rounded-full border-2 border-white">
                         <img src="{{ asset('images/profile.jpg') }}" alt="Profile" class="w-full h-full object-cover rounded-full" />
                     </button>
-
                     <div x-show="open" x-transition @click.outside="open = false"
                          class="absolute top-12 right-0 w-48 bg-white border border-[#00306D]/20 rounded-xl shadow-xl z-50 py-3 px-4 space-y-2 text-sm text-[#00306D]">
                         <p class="font-semibold">{{ auth()->user()->name }}</p>
@@ -39,7 +34,7 @@
                     </div>
                 </div>
             @else
-                <div class="flex items-center gap-4">
+                <div class="flex items-center gap-4 z-10">
                     <a href="{{ route('login') }}" class="nav-link">Login</a>
                     <a href="{{ route('register') }}" class="nav-link">Register</a>
                 </div>
@@ -48,7 +43,7 @@
     </header>
 
     {{-- Main content --}}
-    <main class="flex-1">
+    <main class="flex-1 w-full">
         {{ $slot }}
     </main>
 
@@ -56,6 +51,5 @@
     <footer class="bg-[#00306D] text-white py-4 text-center text-sm mt-10">
         &copy; {{ date('Y') }} {{ env('APP_NAME') }}. All rights reserved.
     </footer>
-
 </body>
 </html>

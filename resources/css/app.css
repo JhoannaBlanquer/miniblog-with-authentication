@@ -4,7 +4,7 @@
 
 @layer base {
     body {
-        @apply bg-[#FFF6F2];
+        @apply bg-blue-100;
     }
 }
 

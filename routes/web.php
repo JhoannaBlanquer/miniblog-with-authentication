@@ -7,36 +7,44 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\ResetPasswordController;
 use Illuminate\Support\Facades\Route;
 
-
+// Redirect root to posts
 Route::redirect('/', 'posts');
 
+// Public Posts
 Route::resource('posts', PostController::class);
 
+// User Posts
 Route::get('/{user}/posts', [DashboardController::class, 'userPosts'])->name('posts.user');
 
+// Redirect to dashboard
 Route::get('/home', fn () => redirect('/dashboard'))->name('home');
 
+// Post Interactions
 Route::post('/posts/{post}/like', [PostController::class, 'like'])->name('posts.like');
 Route::post('/posts/{post}/comment', [PostController::class, 'comment'])->name('posts.comment');
 
-Route::middleware('auth')->group(function(){
+// Guest routes
+Route::middleware('guest')->group(function () {
+    Route::view('/register', 'auth.register')->name('register');
+    Route::post('/register', [AuthController::class, 'register']);
+
+    Route::view('/login', 'auth.login')->name('login');
+    Route::post('/login', [AuthController::class, 'login']);
+
+    Route::view('/forgot-password', 'auth.forgot-password')->name('password.request');
+});
+
+// Authenticated user routes
+Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])
-        ->middleware('admin.redirect')
+        ->middleware('admin.redirect') // Optional custom middleware
         ->name('dashboard');
 
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 });
 
-Route::middleware('guest')->group(function(){
-    Route::view('/register', 'auth.register')->name('register');
-    Route::post('/register', [AuthController::class, 'register']);
-
-    Route::view('/login', 'auth.login')->name('login');
-    Route::post('/login' , [AuthController::class, 'login']);
-
-    Route::view('/forgot-password', 'auth.forgot-password')->name('password.request');
-});
-
+// Admin-only routes
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
+    Route::post('/users', [AuthController::class, 'store']); // For AJAX user creation
 });
