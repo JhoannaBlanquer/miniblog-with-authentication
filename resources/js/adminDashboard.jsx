@@ -384,41 +384,82 @@ function DataTable({ data, type, csrf }) {
                 <div key={item.id} className={`grid grid-cols-3 items-center px-6 py-4 border-b transition ${index % 2 === 0 ? 'bg-white' : 'bg-gray-50'} hover:bg-gray-100`}>
                     <div>{item.id}</div>
                     <div>{item.name || item.title}</div>
-                    <div className="flex justify-end space-x-2">
-                        {/* View Button */}
-                        <a
-                            href={`/${type === 'post' ? 'posts' : 'users'}/${item.id}`}
-                            className="text-sm bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-600 transition"
-                        >
-                            View
-                        </a>
-
-                        {/* Edit Button */}
-                        <a
-                            href={`/${type === 'post' ? 'posts' : 'users'}/${item.id}/edit`}
-                            className="text-sm bg-yellow-500 text-white px-3 py-1 rounded-md hover:bg-yellow-600 transition"
-                        >
-                            Edit
-                        </a>
-
-                        {/* Delete Button */}
-                        <form
-                            method="POST"
-                            action={`/${type === 'post' ? 'posts' : 'users'}/${item.id}`}
-                            onSubmit={(e) => {
-                                if (!confirm(`Are you sure you want to delete this ${type}?`)) e.preventDefault();
-                            }}
-                        >
-                            <input type="hidden" name="_method" value="DELETE" />
-                            <input type="hidden" name="_token" value={csrf} />
-                            <button
-                                type="submit"
-                                className="text-sm bg-red-600 text-white px-3 py-1 rounded-md hover:bg-red-700 transition"
+                <div className="flex justify-end space-x-2">
+                    {type === 'post' ? (
+                        <>
+                            {/* View Post */}
+                            <a
+                                href={`/posts/${item.id}`}
+                                className="text-sm bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-600 transition"
                             >
-                                Delete
-                            </button>
-                        </form>
-                    </div>
+                                View
+                            </a>
+
+                            {/* Edit Post */}
+                            <a
+                                href={`/posts/${item.id}/edit`}
+                                className="text-sm bg-yellow-500 text-white px-3 py-1 rounded-md hover:bg-yellow-600 transition"
+                            >
+                                Edit
+                            </a>
+
+                            {/* Delete Post */}
+                            <form
+                                method="POST"
+                                action={`/posts/${item.id}`}
+                                onSubmit={(e) => {
+                                    if (!confirm("Are you sure you want to delete this post?")) e.preventDefault();
+                                }}
+                            >
+                                <input type="hidden" name="_method" value="DELETE" />
+                                <input type="hidden" name="_token" value={csrf} />
+                                <button
+                                    type="submit"
+                                    className="text-sm bg-red-600 text-white px-3 py-1 rounded-md hover:bg-red-700 transition"
+                                >
+                                    Delete
+                                </button>
+                            </form>
+                        </>
+                    ) : (
+                        <>
+                            {/* View User's Posts */}
+                            <a
+                                href={`/${item.id}/posts`}
+                                className="text-sm bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-600 transition"
+                            >
+                                View
+                            </a>
+
+                            {/* Assign Role */}
+                            <a
+                                href={`/users/${item.id}/role`}
+                                className="text-sm bg-purple-500 text-white px-3 py-1 rounded-md hover:bg-purple-600 transition"
+                            >
+                                Role
+                            </a>
+
+                            {/* Delete User and Their Posts */}
+                            <form
+                                method="POST"
+                                action={`/users/${item.id}`}
+                                onSubmit={(e) => {
+                                    if (!confirm("Are you sure you want to delete this user and all their posts?")) e.preventDefault();
+                                }}
+                            >
+                                <input type="hidden" name="_method" value="DELETE" />
+                                <input type="hidden" name="_token" value={csrf} />
+                                <button
+                                    type="submit"
+                                    className="text-sm bg-red-600 text-white px-3 py-1 rounded-md hover:bg-red-700 transition"
+                                >
+                                    Delete
+                                </button>
+                            </form>
+                        </>
+                    )}
+                </div>
+
                 </div>
             )) : (
                 <div className="text-center px-6 py-6 text-gray-600">No {type}s found.</div>
