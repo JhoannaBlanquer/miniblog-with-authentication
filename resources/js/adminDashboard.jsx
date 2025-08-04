@@ -94,7 +94,7 @@ export default function AdminDashboard() {
                         <div className="flex justify-end mb-6">
                             <button
                                 onClick={() => setOpenModal(true)}
-                                className="bg-[#00306D] text-white px-4 py-2 rounded"
+                                className="bg-[#00306D] hover:bg-blue-900 text-white px-4 py-2 rounded font-semibold transition"
                             >
                                 New Post
                             </button>
